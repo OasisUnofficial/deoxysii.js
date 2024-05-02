@@ -1,4 +1,6 @@
+// SPDX-License-Identifier: MIT
 // Copyright (c) 2019 Oasis Labs Inc. <info@oasislabs.com>
+// Copyright (c) 2024 Oasis Protocol Foundation <info@oasisprotocol.org>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -20,58 +22,65 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-var deoxysii = require('../deoxysii');
-var Benchmark = require('benchmark');
+import { bench } from "vitest";
+import { AEAD, KeySize, NonceSize } from "./deoxysii";
 
-var aeadCt32 = new deoxysii.AEAD(Buffer.alloc(deoxysii.KeySize));
-var aeadVartime = new deoxysii.AEAD(Buffer.alloc(deoxysii.KeySize), true);
-const nonce = Buffer.alloc(deoxysii.NonceSize);
-var src = Buffer.alloc(1024768);
+const aeadCt32 = new AEAD(Buffer.alloc(KeySize));
+const nonce = Buffer.alloc(NonceSize);
+const src = Buffer.alloc(1024768);
 
-var suite = new Benchmark.Suite;
-suite.add('ct32: Encrypt 8', function() {
-	aeadCt32.encrypt(nonce, src.slice(0, 8), null);
-})
-	.add('ct32: Encrypt 32', function() {
-		aeadCt32.encrypt(nonce, src.slice(0, 32), null);
-	})
-	.add('ct32: Encrypt 64', function() {
-		aeadCt32.encrypt(nonce, src.slice(0, 64), null);
-	})
-	.add('ct32: Encrypt 576', function() {
-		aeadCt32.encrypt(nonce, src.slice(0, 576), null);
-	})
-	.add('ct32: Encrypt 1536', function() {
-		aeadCt32.encrypt(nonce, src.slice(0, 1536), null);
-	})
-	.add('ct32: Encrypt 4096', function() {
-		aeadCt32.encrypt(nonce, src.slice(0, 4096), null);
-	})
-	.add('ct32: Encrypt 1024768', function() {
-		aeadCt32.encrypt(nonce, src.slice(0, 1024768), null);
-	})
-	.add('vartime: Encrypt 8', function() {
-		aeadVartime.encrypt(nonce, src.slice(0, 8), null);
-	})
-	.add('vartime: Encrypt 32', function() {
-		aeadVartime.encrypt(nonce, src.slice(0, 32), null);
-	})
-	.add('vartime: Encrypt 64', function() {
-		aeadVartime.encrypt(nonce, src.slice(0, 64), null);
-	})
-	.add('vartime: Encrypt 576', function() {
-		aeadVartime.encrypt(nonce, src.slice(0, 576), null);
-	})
-	.add('vartime: Encrypt 1536', function() {
-		aeadVartime.encrypt(nonce, src.slice(0, 1536), null);
-	})
-	.add('vartime: Encrypt 4096', function() {
-		aeadVartime.encrypt(nonce, src.slice(0, 4096), null);
-	})
-	.add('vartime: Encrypt 1024768', function() {
-		aeadVartime.encrypt(nonce, src.slice(0, 1024768), null);
-	})
-	.on('cycle', function(event) {
-		console.log(String(event.target)); // eslint-disable-line no-console
-	})
-	.run();
+bench(
+	"ct32: Encrypt 8",
+	() => {
+		aeadCt32.encrypt(nonce, src.subarray(0, 8), null);
+	},
+	{ time: 1000 },
+);
+
+bench(
+	"ct32: Encrypt 32",
+	() => {
+		aeadCt32.encrypt(nonce, src.subarray(0, 32), null);
+	},
+	{ time: 1000 },
+);
+
+bench(
+	"ct32: Encrypt 64",
+	() => {
+		aeadCt32.encrypt(nonce, src.subarray(0, 64), null);
+	},
+	{ time: 1000 },
+);
+
+bench(
+	"ct32: Encrypt 576",
+	() => {
+		aeadCt32.encrypt(nonce, src.subarray(0, 576), null);
+	},
+	{ time: 1000 },
+);
+
+bench(
+	"ct32: Encrypt 1536",
+	() => {
+		aeadCt32.encrypt(nonce, src.subarray(0, 1536), null);
+	},
+	{ time: 1000 },
+);
+
+bench(
+	"ct32: Encrypt 4096",
+	() => {
+		aeadCt32.encrypt(nonce, src.subarray(0, 4096), null);
+	},
+	{ time: 1000 },
+);
+
+bench(
+	"ct32: Encrypt 1024768",
+	() => {
+		aeadCt32.encrypt(nonce, src.subarray(0, 1024768), null);
+	},
+	{ time: 5000 },
+);
