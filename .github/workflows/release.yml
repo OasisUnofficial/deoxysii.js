@@ -1,0 +1,26 @@
+name: Publish Package to npmjs
+on:
+  release:
+    types: [created]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: true
+      - name: Build package
+        run: pnpm build
+      - uses: JS-DevTools/npm-publish@v3
+        with:
+          access: "public"
+          token: ${{ secrets.NPM_TOKEN }}
+          provenance: true
